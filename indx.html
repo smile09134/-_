@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人隨身醫療卡 / Medical Profile</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-alt: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-red: #ef4444;
+            --border: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            padding: 20px 10px;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            padding: 24px;
+            border: 1px solid var(--border);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lang-select-box select {
+            background-color: var(--bg-card-alt);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .emergency-banner {
+            background-color: rgba(239, 68, 68, 0.15);
+            border-left: 4px solid var(--accent-red);
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .emergency-banner h3 {
+            color: var(--accent-red);
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background-color: var(--bg-card-alt);
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            color: var(--primary-light);
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 6px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .info-row span:first-child {
+            color: var(--text-muted);
+        }
+
+        .info-row span:last-child {
+            font-weight: 600;
+        }
+
+        ul.list {
+            list-style: none;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        ul.list li {
+            padding: 6px 0;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        ul.list li:last-child {
+            border-bottom: none;
+        }
+
+        .badge {
+            background-color: var(--primary-light);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .badge.alert {
+            background-color: var(--accent-red);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1 id="title">隨身醫療電子病歷</h1>
+        <div class="lang-select-box">
+            <select id="langSelect" onchange="changeLanguage()">
+                <option value="zh">繁體中文</option>
+                <option value="en">English</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="pt">Português</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- 緊急聯絡人區塊 -->
+    <div class="emergency-banner">
+        <h3 id="label-emergency-title">🚨 緊急聯絡資訊 (Emergency Contact)</h3>
+        <div class="info-row" style="margin-top: 8px;">
+            <span id="label-ice-name">聯絡人姓名</span>
+            <span>廖慧真</span>
+        </div>
+        <div class="info-row">
+            <span id="label-ice-phone">緊急電話</span>
+            <span><a href="tel:0912228485" style="color: #60a5fa; text-decoration: none;">0912228485</a></span>
+        </div>
+    </div>
+
+    <!-- 個人基本資料 -->
+    <div class="grid-2">
+        <div class="card">
+            <h2 id="label-personal-info">個人基本資料</h2>
+            <div class="info-row"><span id="label-name">姓名</span><span>廖緗絨</span></div>
+            <div class="info-row"><span id="label-dob">出生日期</span><span>2010.09.13</span></div>
+            <div class="info-row"><span id="label-gender">性別</span><span id="val-gender">女</span></div>
+            <div class="info-row"><span id="label-nationality">國籍</span><span id="val-nationality">台灣</span></div>
+            <div class="info-row"><span id="label-blood">血型</span><span class="badge">O 型</span></div>
+            <div class="info-row"><span id="label-height">身高</span><span>164 cm</span></div>
+            <div class="info-row"><span id="label-weight">體重</span><span>50 kg</span></div>
+        </div>
+
+        <!-- 醫療提醒與過敏史 -->
+        <div class="card">
+            <h2 id="label-alerts">關鍵醫療提醒</h2>
+            <div class="info-row"><span id="label-allergy">過敏史 (Allergies)</span><span class="badge alert" id="val-allergy">無已知過敏 / NKDA</span></div>
+            <div class="info-row"><span id="label-organ-donor">器官捐贈意願</span><span id="val-donor">未登記</span></div>
+            <div class="info-row"><span id="label-vaccine">疫苗接種紀錄</span><span id="val-vaccine">完成基礎疫苗</span></div>
+        </div>
+    </div>
+
+    <!-- 醫療歷史紀錄 -->
+    <div class="grid-2">
+        <div class="card">
+            <h2 id="label-medical-history">個人與疾病史</h2>
+            <ul class="list">
+                <li id="val-history-1">個人史：無特殊重大慢性病史。</li>
+                <li id="val-history-2">過去疾病史：無。</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2 id="label-family-history">家族病史</h2>
+            <ul class="list">
+                <li id="val-fam-1">家族遺傳疾病：無特殊紀錄。</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <h2 id="label-surgery">手術史</h2>
+            <ul class="list">
+                <li id="val-surg-1">無重大手術紀錄。</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2 id="label-medication">長期與目前用藥史</h2>
+            <ul class="list">
+                <li id="val-med-1">無日常長期服藥需求。</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+const i18n = {
+    zh: {
+        title: "隨身醫療電子病歷",
+        emergencyTitle: "🚨 緊急聯絡資訊",
+        iceName: "聯絡人姓名",
+        icePhone: "緊急電話",
+        personalInfo: "個人基本資料",
+        name: "姓名",
+        dob: "出生日期",
+        gender: "性別",
+        genderVal: "女",
+        nationality: "國籍",
+        natVal: "台灣",
+        blood: "血型",
+        height: "身高",
+        weight: "體重",
+        alerts: "關鍵醫療提醒",
+        allergy: "過敏史",
+        allergyVal: "無已知藥物過敏 (NKDA)",
+        organDonor: "器官捐贈意願",
+        donorVal: "未登記",
+        vaccine: "疫苗接種紀錄",
+        vaccineVal: "常規疫苗已完成",
+        medicalHistory: "個人與疾病史",
+        history1: "個人史：身體狀況良好。",
+        history2: "過去病史：無重大慢性病。",
+        familyHistory: "家族病史",
+        fam1: "家族遺傳病史：無特殊紀錄。",
+        surgery: "手術史",
+        surg1: "無重大手術紀錄。",
+        medication: "長期用藥史",
+        med1: "無日常長期服藥需求。"
+    },
+    en: {
+        title: "Personal Medical Profile",
+        emergencyTitle: "🚨 Emergency Contact Information",
+        iceName: "Contact Person",
+        icePhone: "Emergency Phone",
+        personalInfo: "Personal Details",
+        name: "Name",
+        dob: "Date of Birth",
+        gender: "Gender",
+        genderVal: "Female",
+        nationality: "Nationality",
+        natVal: "Taiwan",
+        blood: "Blood Type",
+        height: "Height",
+        weight: "Weight",
+        alerts: "Critical Alerts",
+        allergy: "Allergies",
+        allergyVal: "No Known Drug Allergies (NKDA)",
+        organDonor: "Organ Donor",
+        donorVal: "Not Registered",
+        vaccine: "Vaccinations",
+        vaccineVal: "Up to date",
+        medicalHistory: "Medical History",
+        history1: "Personal History: General good health.",
+        history2: "Past History: None.",
+        familyHistory: "Family History",
+        fam1: "Family Diseases: No significant records.",
+        surgery: "Surgical History",
+        surg1: "No major surgery history.",
+        medication: "Medications",
+        med1: "No ongoing prescriptions."
+    },
+    ja: {
+        title: "個人個人診療記録卡",
+        emergencyTitle: "🚨 緊急連絡先情報",
+        iceName: "連絡人氏名",
+        icePhone: "緊急電話番号",
+        personalInfo: "基本情報",
+        name: "氏名",
+        dob: "生年月日",
+        gender: "性別",
+        genderVal: "女性",
+        nationality: "国籍",
+        natVal: "台湾",
+        blood: "血液型",
+        height: "身長",
+        weight: "体重",
+        alerts: "緊急警報・アレルギー",
+        allergy: "アレルギー史",
+        allergyVal: "アレルギーなし (NKDA)",
+        organDonor: "臓器提供意思",
+        donorVal: "未登録",
+        vaccine: "予防接種",
+        vaccineVal: "接種完了",
+        medicalHistory: "個人・既往症歴",
+        history1: "個人史：健康状態良好",
+        history2: "既往症：重大な病歴なし",
+        familyHistory: "家族病歴",
+        fam1: "家族病歴：特記事項なし",
+        surgery: "手術歴",
+        surg1: "重大な手術歴なし",
+        medication: "常服薬History",
+        med1: "日常的な常服藥なし"
+    },
+    ko: {
+        title: "개인 의료 정보 카드",
+        emergencyTitle: "🚨 비상 연락처",
+        iceName: "보호자 성명",
+        icePhone: "비상 전화번호",
+        personalInfo: "개인 정보",
+        name: "성명",
+        dob: "생년월일",
+        gender: "성별",
+        genderVal: "여성",
+        nationality: "국적",
+        natVal: "대만",
+        blood: "혈액형",
+        height: "신장",
+        weight: "체중",
+        alerts: "중요 의료 주의사항",
+        allergy: "알레르기",
+        allergyVal: "알려진 약물 알레르기 없음",
+        organDonor: "장기 기부",
+        donorVal: "미등록",
+        vaccine: "예방 접종",
+        vaccineVal: "접종 완료",
+        medicalHistory: "개인 및 과거 병력",
+        history1: "개인 이력: 건강 상태良好.",
+        history2: "과거 병력: 없음.",
+        familyHistory: "가족력",
+        fam1: "가족 유전 질환: 특이사항 없음.",
+        surgery: "수술 이력",
+        surg1: "주요 수술 이력 없음.",
+        medication: "복용 중인 약물",
+        med1: "장기 복용 약물 없음."
+    },
+    es: {
+        title: "Perfil Médico Personal",
+        emergencyTitle: "🚨 Contacto de Emergencia",
+        iceName: "Contacto",
+        icePhone: "Teléfono de Emergencia",
+        personalInfo: "Información Personal",
+        name: "Nombre",
+        dob: "Fecha de Nacimiento",
+        gender: "Género",
+        genderVal: "Femenino",
+        nationality: "Nacionalidad",
+        natVal: "Taiwán",
+        blood: "Grupo Sanguíneo",
+        height: "Altura",
+        weight: "Peso",
+        alerts: "Alertas Médicas",
+        allergy: "Alergias",
+        allergyVal: "Sin alergias conocidas (NKDA)",
+        organDonor: "Donante de Órganos",
+        donorVal: "No registrado",
+        vaccine: "Vacunas",
+        vaccineVal: "Al día",
+        medicalHistory: "Historial Médico",
+        history1: "Historial Personal: Buena salud.",
+        history2: "Enfermedades Pasadas: Ninguna.",
+        familyHistory: "Historial Familiar",
+        fam1: "Enfermedades Familiares: Sin registros.",
+        surgery: "Cirugías",
+        surg1: "Sin cirugías mayores.",
+        medication: "Medicamentos",
+        med1: "Sin medicación habitual."
+    },
+    fr: {
+        title: "Dossier Médical Personnel",
+        emergencyTitle: "🚨 Contact d'Urgence",
+        iceName: "Nom du Contact",
+        icePhone: "Téléphone d'Urgence",
+        personalInfo: "Informations Personnelles",
+        name: "Nom",
+        dob: "Date de Naissance",
+        gender: "Genre",
+        genderVal: "Féminin",
+        nationality: "Nationalité",
+        natVal: "Taïwan",
+        blood: "Groupe Sanguin",
+        height: "Taille",
+        weight: "Poids",
+        alerts: "Alertes Médicales",
+        allergy: "Allergies",
+        allergyVal: "Aucune allergie connue",
+        organDonor: "Don d'Organes",
+        donorVal: "Non enregistré",
+        vaccine: "Vaccinations",
+        vaccineVal: "À jour",
+        medicalHistory: "Antécédents Médicaux",
+        history1: "Histoire Personnelle: Bonne santé.",
+        history2: "Maladies Passées: Aucune.",
+        familyHistory: "Antécédents Familiaux",
+        fam1: "Maladies Familiales: Rien à signaler.",
+        surgery: "Chirurgies",
+        surg1: "Pas de chirurgie majeure.",
+        medication: "Médicaments",
+        med1: "Pas de traitement en cours."
+    },
+    de: {
+        title: "Persönliche Medizinische Akte",
+        emergencyTitle: "🚨 Notfallkontakt",
+        iceName: "Kontaktperson",
+        icePhone: "Notfalltelefon",
+        personalInfo: "Persönliche Daten",
+        name: "Name",
+        dob: "Geburtsdatum",
+        gender: "Geschlecht",
+        genderVal: "Weiblich",
+        nationality: "Nationalität",
+        natVal: "Taiwan",
+        blood: "Blutgruppe",
+        height: "Größe",
+        weight: "Gewicht",
+        alerts: "Wichtige Hinweise",
+        allergy: "Allergien",
+        allergyVal: "Keine bekannten Allergien",
+        organDonor: "Organspender",
+        donorVal: "Nicht registriert",
+        vaccine: "Impfungen",
+        vaccineVal: "Vollständig",
+        medicalHistory: "Krankengeschichte",
+        history1: "Persönliche Historie: Guter Zustand.",
+        history2: "Vorerkrankungen: Keine.",
+        familyHistory: "Familienanamnese",
+        fam1: "Erbkrankheiten: Keine bekannt.",
+        surgery: "Operationen",
+        surg1: "Keine schweren Operationen.",
+        medication: "Medikamente",
+        med1: "Keine Dauermedikation."
+    },
+    pt: {
+        title: "Prontuário Médico Pessoal",
+        emergencyTitle: "🚨 Contato de Emergência",
+        iceName: "Nome do Contato",
+        icePhone: "Telefone de Emergência",
+        personalInfo: "Dados Pessoais",
+        name: "Nome",
+        dob: "Data de Nascimento",
+        gender: "Gênero",
+        genderVal: "Feminino",
+        nationality: "Nacionalidade",
+        natVal: "Taiwan",
+        blood: "Tipo Sanguíneo",
+        height: "Altura",
+        weight: "Peso",
+        alerts: "Alertas Médicos",
+        allergy: "Alergias",
+        allergyVal: "Sem alergias conhecidas",
+        organDonor: "Doador de Órgãos",
+        donorVal: "Não registrado",
+        vaccine: "Vacinação",
+        vaccineVal: "Em dia",
+        medicalHistory: "Histórico Médico",
+        history1: "Histórico Pessoal: Boa saúde.",
+        history2: "Doenças Anteriores: Nenhuma.",
+        familyHistory: "Histórico Familiar",
+        fam1: "Doenças Familiares: Sem registros.",
+        surgery: "Cirurgias",
+        surg1: "Sem cirurgias discretas.",
+        medication: "Medicamentos",
+        med1: "Sem medicação contínua."
+    }
+};
+
+function changeLanguage() {
+    const lang = document.getElementById("langSelect").value;
+    const data = i18n[lang];
+
+    document.getElementById("title").innerText = data.title;
+    document.getElementById("label-emergency-title").innerText = data.emergencyTitle;
+    document.getElementById("label-ice-name").innerText = data.iceName;
+    document.getElementById("label-ice-phone").innerText = data.icePhone;
+    document.getElementById("label-personal-info").innerText = data.personalInfo;
+    document.getElementById("label-name").innerText = data.name;
+    document.getElementById("label-dob").innerText = data.dob;
+    document.getElementById("label-gender").innerText = data.gender;
+    document.getElementById("val-gender").innerText = data.genderVal;
+    document.getElementById("label-nationality").innerText = data.nationality;
+    document.getElementById("val-nationality").innerText = data.natVal;
+    document.getElementById("label-blood").innerText = data.blood;
+    document.getElementById("label-height").innerText = data.height;
+    document.getElementById("label-weight").innerText = data.weight;
+    document.getElementById("label-alerts").innerText = data.alerts;
+    document.getElementById("label-allergy").innerText = data.allergy;
+    document.getElementById("val-allergy").innerText = data.allergyVal;
+    document.getElementById("label-organ-donor").innerText = data.organDonor;
+    document.getElementById("val-donor").innerText = data.donorVal;
+    document.getElementById("label-vaccine").innerText = data.vaccine;
+    document.getElementById("val-vaccine").innerText = data.vaccineVal;
+    document.getElementById("label-medical-history").innerText = data.medicalHistory;
+    document.getElementById("val-history-1").innerText = data.history1;
+    document.getElementById("val-history-2").innerText = data.history2;
+    document.getElementById("label-family-history").innerText = data.familyHistory;
+    document.getElementById("val-fam-1").innerText = data.fam1;
+    document.getElementById("label-surgery").innerText = data.surgery;
+    document.getElementById("val-surg-1").innerText = data.surg1;
+    document.getElementById("label-medication").innerText = data.medication;
+    document.getElementById("val-med-1").innerText = data.med1;
+}
+</script>
+</body>
+</html>
